@@ -1,0 +1,48 @@
+dataset_opt:
+  jaw_size: 4096
+  average_sp: False
+  surface_sp_mode: 'random' # the sampling method of pointcloud surface
+
+shape_model_type: michelangelo.models.tsal.sal_perceiver.FPSShapePerceiver
+shape_model:
+  device: cuda
+  num_latents: 768
+  embed_dim: 64
+  width: 512
+  heads: 8
+  num_encoder_layers: 8
+  num_decoder_layers: 16
+
+denoiser_model_type: crown_diffusion.Crown_denoiser
+denoiser_model: 
+  input_channels: ${shape_model.embed_dim}
+  output_channels:  ${shape_model.embed_dim}
+  width: 1024
+  layers: 20
+  heads: 16
+  init_scale: 1.0
+  use_checkpoint: true
+  crown_cate: true
+  
+system_type: crown_diffusion.Crown_diffusion_system
+system:
+  noise_scheduler_type: diffusers.schedulers.DDPMScheduler
+  noise_scheduler: 
+    num_train_timesteps: 1000
+    beta_start: 0.00085
+    beta_end: 0.012
+    beta_schedule: "scaled_linear"
+    variance_type: "fixed_small"
+    clip_sample: false
+
+  denoise_scheduler_type: diffusers.schedulers.DDIMScheduler
+  denoise_scheduler: 
+    num_train_timesteps: 1000
+    beta_start: 0.00085
+    beta_end: 0.012
+    beta_schedule: "scaled_linear"
+    clip_sample: false   # clip sample to -1~1
+    set_alpha_to_one: false
+    steps_offset: 1
+  snr_gamma: 5.0
+
