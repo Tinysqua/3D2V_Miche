@@ -1,0 +1,72 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug: train",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal", 
+            "args": ["--data_path", "/data7/haolin/TeethData/RD_3", 
+                     "--model", "kl_d512_m512_l16", "--point_cloud_size", "4096", 
+                     "--batch_size", "4", "--epochs", "200", "--warmup_epochs", "5", 
+                     "--log_dir", "./output/test", "--config_path", "configs/config.yaml"]
+        }, 
+        {
+            "name": "Debug: eval",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal", 
+            "args": ["--data_path", "/data_new2/sz_zzz/Data/Teeth/RD_1", 
+                     "--model", "kl_d512_m512_l512", "--pth", "output/ae/kl_d512_m512_l512_noaug/checkpoint-1140.pth", 
+                     "--device", "cuda:0"]
+        }, 
+        {
+            "name": "Debug: Miche-eval",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal", 
+            "args": ["--txt_path", "/data7/haolin/TeethData/RD_3/val.txt", 
+                     "--ae_pth", "output/ae/kl_d512_m512_l64/checkpoint-4240.pth", 
+                     "--pth", "output/diffusion/dit_1024_24_16_512_cat/checkpoint-3040.pth", 
+                     "--cfg_path", "output/diffusion/dit_1024_24_16_512_cat/config.yaml"]
+           
+        }, 
+        {
+            "name": "Normal Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }, 
+        {
+            "name": "Debug: diffusion",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal", 
+            "args": ["--data_path", "/data7/haolin/TeethData/RD_3", 
+                     "--ae", "kl_d512_m512_l64", "--point_cloud_size", "8192", 
+                     "--ae-pth", "output/ae/kl_d512_m512_l64/checkpoint-4240.pth", 
+                     "--batch_size", "2", "--epochs", "200", "--warmup_epochs", "5", 
+                     "--log_dir", "./output/test", "--output_dir", "./output/test", "--config_path", "configs/config.yaml"], 
+            "env": {"CUDA_VISIBLE_DEVICES": "1"}
+        }, 
+        {
+            "name": "Debug: evaldiffusion",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "Miche_sample.py",
+            "console": "integratedTerminal", 
+            "args": ["--txt_path", "/data7/haolin/TeethData/RD_3/val.txt", 
+                     "--ae_pth", "output/ae/kl_d512_m512_l64/checkpoint-4240.pth", 
+                     "--pth", "output/diffusion/kl_d512_m512_l64_Miche/checkpoint-560.pth", 
+                     "--cfg_path", "configs/config.yaml"]
+        }, 
+    ]
+}
